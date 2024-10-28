@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { setCity } from "../store/weatherSlice";
 import { FormDataInterface } from "types/components";
@@ -11,8 +11,7 @@ import { TopCitiesWeather } from "screens";
 const SearchBar: React.FC = () => {
   const {
     handleSubmit,
-    control,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<FormDataInterface>();
   const dispatch = useDispatch();
   const [selectedOption, setSelectedOption] = useState<any>(null);
@@ -24,7 +23,8 @@ const SearchBar: React.FC = () => {
     loadCities();
   }, [debouncedText]);
 
-  const onSubmit = (data: FormDataInterface) => {
+  // const onSubmit = (data: FormDataInterface) => {
+  const onSubmit = () => {
     console.log("data: ", selectedOption?.value);
     dispatch(setCity(selectedOption?.value));
   };
@@ -32,7 +32,8 @@ const SearchBar: React.FC = () => {
   async function loadCities() {
     try {
       console.log("debouncedText; ", debouncedText);
-      const transformedCities = [cities]
+      const transformedCities = cities
+        //@ts-ignore
         .filter((item: any) => item.name.toLowerCase().includes(debouncedText))
         .slice(0, 1000)
         .map((item: any) => ({
@@ -58,7 +59,7 @@ const SearchBar: React.FC = () => {
             className="flex-grow px-4 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter city name"
           /> */}
-          {/* <Select
+          <Select
             defaultValue={selectedOption}
             onChange={setSelectedOption}
             isSearchable={true}
@@ -67,24 +68,6 @@ const SearchBar: React.FC = () => {
             onInputChange={(text) => setQuery(text)}
             isClearable
             placeholder="Search a city here"
-          /> */}
-          <Controller
-            name="city"
-            control={control}
-            defaultValue={""}
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={options}
-                placeholder="Select a city here"
-                defaultValue={selectedOption}
-                onChange={setSelectedOption}
-                isSearchable={true}
-                className="w-full"
-                onInputChange={(text) => setQuery(text)}
-                isClearable
-              />
-            )}
           />
           <button
             type="submit"
@@ -93,9 +76,9 @@ const SearchBar: React.FC = () => {
             Search
           </button>
         </div>
-        {errors.city && (
+        {/* {errors.city && (
           <p className="mt-2 text-red-500">{errors.city.message}</p>
-        )}
+        )} */}
       </form>
     </>
   );
