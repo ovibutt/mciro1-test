@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ErrorInfo } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Provider } from "react-redux";
+import store from "./store";
+import { ErrorBoundary } from "react-error-boundary";
+import { Header, SearchBar } from "components";
+import {
+  CurrentWeather,
+  ErrorFallback,
+  Forecast,
+  HistoricalData,
+} from "screens";
 
-function App() {
+const queryClient = new QueryClient();
+
+const logError = (error: Error, info: ErrorInfo) => {
+  console.error(error, info);
+};
+
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <Router>
+            <div className="min-h-screen bg-gray-100">
+              <Header />
+              <main className="container mx-auto px-4 py-8">
+                <SearchBar />
+                <Routes>
+                  <Route path="/" element={<CurrentWeather />} />
+                  <Route path="/forecast" element={<Forecast />} />
+                  <Route path="/historical" element={<HistoricalData />} />
+                </Routes>
+              </main>
+            </div>
+          </Router>
+        </QueryClientProvider>
+      </Provider>
+    </ErrorBoundary>
   );
-}
+};
 
 export default App;
