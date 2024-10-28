@@ -6,11 +6,12 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `versions`
+### `Versions Used`
 
 Following are the versions used to develop this app
-Node: v20.13.1
-NPM: v10.8.1
+
+1. Node: v20.13.1
+2. NPM: v10.8.1
 
 ### `npm i`
 
