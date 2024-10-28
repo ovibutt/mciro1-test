@@ -9,10 +9,7 @@ import { useDebounce } from "use-debounce";
 import { TopCitiesWeather } from "screens";
 
 const SearchBar: React.FC = () => {
-  const {
-    handleSubmit,
-    // formState: { errors },
-  } = useForm<FormDataInterface>();
+  const { handleSubmit } = useForm<FormDataInterface>();
   const dispatch = useDispatch();
   const [selectedOption, setSelectedOption] = useState<any>(null);
   const [options, setOptions] = useState<any>([]);
@@ -23,18 +20,20 @@ const SearchBar: React.FC = () => {
     loadCities();
   }, [debouncedText]);
 
-  // const onSubmit = (data: FormDataInterface) => {
   const onSubmit = () => {
-    console.log("data: ", selectedOption?.value);
-    dispatch(setCity(selectedOption?.value));
+    if (selectedOption) {
+      // console.log("Selected city:", selectedOption.value);
+      dispatch(setCity(selectedOption.value));
+    }
   };
 
   async function loadCities() {
     try {
-      console.log("debouncedText; ", debouncedText);
       const transformedCities = cities
         //@ts-ignore
-        .filter((item: any) => item.name.toLowerCase().includes(debouncedText))
+        .filter((item: any) =>
+          item.name.toLowerCase().includes(debouncedText.toLowerCase())
+        )
         .slice(0, 1000)
         .map((item: any) => ({
           value: item.name,
@@ -54,18 +53,13 @@ const SearchBar: React.FC = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="mb-8">
         <div className="flex items-center">
-          {/* <input
-            {...register("city", { required: "City is required" })}
-            className="flex-grow px-4 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter city name"
-          /> */}
           <Select
-            defaultValue={selectedOption}
-            onChange={setSelectedOption}
+            value={selectedOption} // Ensure the selected option is set correctly
+            onChange={(option) => setSelectedOption(option)}
             isSearchable={true}
             className="w-full"
             options={options}
-            onInputChange={(text) => setQuery(text)}
+            onInputChange={(text) => setQuery(text)} // Update the search query
             isClearable
             placeholder="Search a city here"
           />
@@ -76,9 +70,6 @@ const SearchBar: React.FC = () => {
             Search
           </button>
         </div>
-        {/* {errors.city && (
-          <p className="mt-2 text-red-500">{errors.city.message}</p>
-        )} */}
       </form>
     </>
   );

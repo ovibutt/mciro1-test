@@ -7,7 +7,7 @@ export const fetchCurrentWeather = async (
   const response = await axios.get<WeatherData>(
     `${process.env.REACT_APP_BASE_URL}/weather?q=${city}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
   );
-  console.log("fetchCurrentWeather: ", response);
+  // console.log("fetchCurrentWeather: ", response);
   return response.data;
 };
 
@@ -15,7 +15,7 @@ export const fetchForecast = async (city: string): Promise<ForecastData> => {
   const response = await axios.get<ForecastData>(
     `${process.env.REACT_APP_BASE_URL}/forecast?q=${city}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
   );
-  console.log("fetchForecast: ", response);
+  // console.log("fetchForecast: ", response);
 
   return response.data;
 };
@@ -26,10 +26,10 @@ export const fetchHistoricalData = async (
   // Note: OpenWeatherMap doesn't provide free historical data
   // This is a mock implementation
   const mockData: HistoricalData[] = Array.from({ length: 12 }, (_, i) => ({
-    date: new Date(2023, i, 1).toLocaleDateString(),
+    date: new Date(2024, i, 1).toLocaleDateString(),
     high: Math.round(Math.random() * 20 + 10),
     low: Math.round(Math.random() * 10),
   }));
-  console.log("fetchHistoricalData: ", fetchHistoricalData);
+  // console.log("fetchHistoricalData: ", fetchHistoricalData);
   return mockData;
 };
